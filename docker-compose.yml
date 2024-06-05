@@ -1,0 +1,11 @@
+services:
+
+  php:
+    build:
+      context: docker/php
+    working_dir: /var/www/html
+    environment:
+      COMPOSER_HOME: /tmp
+    volumes:
+      - .:/var/www/html
+    user: ${USER_ID:-1000}:${GROUP_ID:-1000}

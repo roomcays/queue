@@ -1,0 +1,28 @@
+{
+  "name": "kodzitsu/queue",
+  "description": "One-at-the time FIFO job queue mechanism with persistent queue log",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "KODZITSU",
+      "email": "halo@kodzitsu.pl"
+    }
+  ],
+  "config": {
+    "sort-packages": true
+  },
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kodzitsu\\Queue\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
+}
