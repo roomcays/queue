@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ruleset name="Stellantis Dealer API Helper Standard" namespace="DealerAPIHelper\CS\Standard">
+    <file>src</file>
+    <rule ref="PSR1"/>
+    <rule ref="PSR12"/>
+</ruleset>
