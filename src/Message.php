@@ -9,17 +9,47 @@ class Message
     public const STATUS_DONE = 'DONE';
 
     private string $id;
-    private ?string $payload = null;
+    private string $status;
 
-    public function __construct(private string $status = self::STATUS_ENQUEUED)
+    public function __construct(private ?string $payload = null)
     {
         $this->id = uniqid();
+        $this->status = self::STATUS_ENQUEUED;
+    }
+
+    /**
+     * Use this method to load message from storage (so keep its id)
+     */
+    public static function load(string $id, string $status, ?string $payload): self
+    {
+        self::checkStatus($status);
+        $message = new Message($payload);
+        $message->id = $id;
+        $message->status = $status;
+
+        return $message;
     }
 
     public function asEnqueued(): self
     {
         $clone = clone $this;
-        $this->status = self::STATUS_ENQUEUED;
+        $clone->status = self::STATUS_ENQUEUED;
+
+        return $clone;
+    }
+
+    public function asRunning(): self
+    {
+        $clone = clone $this;
+        $clone->status = self::STATUS_RUNNING;
+
+        return $clone;
+    }
+
+    public function asDone(): self
+    {
+        $clone = clone $this;
+        $clone->status = self::STATUS_DONE;
 
         return $clone;
     }
@@ -27,7 +57,7 @@ class Message
     public function withPayload(string $payload): self
     {
         $clone = clone $this;
-        $this->payload = $payload;
+        $clone->payload = $payload;
 
         return $clone;
     }
@@ -45,5 +75,27 @@ class Message
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public static function checkStatus(string $status): void
+    {
+        $valid_statuses = [
+            self::STATUS_ENQUEUED,
+            self::STATUS_RUNNING,
+            self::STATUS_DONE,
+        ];
+
+        if (
+            !in_array(
+                $status,
+                $valid_statuses
+            )
+        ) {
+            throw new QueueException(sprintf(
+                'Invalid message status: "%s", valid are: %s',
+                $status,
+                join(', ', $valid_statuses)
+            ));
+        };
     }
 }

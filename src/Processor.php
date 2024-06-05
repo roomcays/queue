@@ -2,6 +2,9 @@
 
 namespace Kodzitsu\Queue;
 
+use Kodzitsu\Queue\Handler\HandlerInterface;
+use Kodzitsu\Queue\Storage\StorageInterface;
+
 readonly class Processor
 {
     public function __construct(private StorageInterface $storage, private HandlerInterface $handler)
@@ -24,15 +27,5 @@ readonly class Processor
         $this->storage->markDone($message);
 
         return $result;
-    }
-
-    public function enqueue(Message $message): void
-    {
-        $this->storage->enqueue($message->asEnqueued());
-    }
-
-    public function dequeue(Message $message): bool
-    {
-        return $this->storage->dequeue($message);
     }
 }

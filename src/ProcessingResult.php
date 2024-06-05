@@ -2,6 +2,14 @@
 
 namespace Kodzitsu\Queue;
 
-class ProcessingResult
+readonly class ProcessingResult
 {
+    public function __construct(private string $response)
+    {
+    }
+
+    public function getResponse(): string
+    {
+        return $this->response;
+    }
 }

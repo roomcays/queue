@@ -1,10 +1,12 @@
 <?php
 
-namespace Kodzitsu\Queue;
+namespace Kodzitsu\Queue\Storage;
+
+use Kodzitsu\Queue\Message;
 
 interface StorageInterface
 {
-    public function enqueue(Message $message): void;
+    public function enqueue(Message ...$messages): void;
 
     public function next(): ?Message;
 
@@ -13,6 +15,10 @@ interface StorageInterface
     public function clear(): bool;
 
     public function isBusy(): bool;
+
+    public function countEnqueued(): int;
+
+    public function countDone(): int;
 
     public function markRunning(Message $message): void;
 

@@ -1,6 +1,7 @@
 {
   "name": "kodzitsu/queue",
   "description": "One-at-the time FIFO job queue mechanism with persistent queue log",
+  "version": "1.0.0",
   "type": "library",
   "license": "MIT",
   "authors": [

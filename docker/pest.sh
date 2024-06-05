@@ -3,7 +3,9 @@
 pushd "$(dirname "$0")" > /dev/null || exit
 pushd .. > /dev/null
 
-source docker/php.sh vendor/bin/phpunit "$@"
+# Following will let Pest use `--coverage` argument
+XDEBUG_MODE=coverage
+source docker/php.sh vendor/bin/pest "$@"
 
 popd > /dev/null || exit
 popd > /dev/null || exit
