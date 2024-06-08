@@ -17,7 +17,9 @@ class Memory implements StorageInterface
     public function enqueue(Message ...$messages): void
     {
         foreach ($messages as $message) {
-            $this->queue[$message->getId()] = $message->asEnqueued();
+            // Force message's state to ENQUEUED regardless of what it holds originally
+            $message->setState(Message\State::ENQUEUED);
+            $this->queue[$message->getId()] = $message;
         }
     }
 
@@ -60,10 +62,11 @@ class Memory implements StorageInterface
         if (!isset($this->queue[$message->getId()])) {
             throw new QueueException('Unable to mark running a non-existent message');
         }
-        if ($this->running !== null) {
+        if ($this->isBusy()) {
             throw new QueueException('Only single message can be run at the time');
         }
-        $this->running = $message->asRunning();
+        $message->setState(Message\State::RUNNING);
+        $this->running = $message;
         unset($this->queue[$message->getId()]);
     }
 
@@ -75,7 +78,7 @@ class Memory implements StorageInterface
         if ($this->running->getId() !== $message->getId()) {
             throw new QueueException('Actually running message is not the one given');
         }
-
+        $message->setState(Message\State::DONE);
         $this->finished[$message->getId()] = $message;
         $this->running = null;
     }

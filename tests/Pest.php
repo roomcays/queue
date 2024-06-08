@@ -39,7 +39,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function getTmpDirectory(): string
 {
-    // ..
+    return realpath(__DIR__ . '/../tmp/');
 }

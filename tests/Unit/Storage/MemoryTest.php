@@ -10,7 +10,7 @@ it('it can enqueue message', function () {
     $message = $memory_storage->next();
     expect($message)->toBeInstanceOf(Message::class)
         ->and($message->getPayload())->toBe('foobar')
-        ->and($message->getStatus())->toBe('ENQUEUED');
+        ->and($message->getState())->toBe(Message\State::ENQUEUED);
 });
 
 it('it can dequeue a message', function () {
@@ -49,7 +49,8 @@ it('can count enqueued messages when one of them is running', function() {
     $memory_storage->enqueue($message1, $message2);
     expect($memory_storage->countEnqueued())->toBe(2);
     $memory_storage->markRunning($message1);
-    expect($memory_storage->countEnqueued())->toBe(1);
+    expect($memory_storage->countEnqueued())->toBe(1)
+        ->and($message1->getState())->toBe(Message\State::RUNNING);
 });
 
 it('can count finished messages', function() {
@@ -60,7 +61,8 @@ it('can count finished messages', function() {
     expect($memory_storage->countEnqueued())->toBe(2)->and($memory_storage->countDone())->toBe(0);
     $memory_storage->markRunning($message1);
     $memory_storage->markDone($message1);
-    expect($memory_storage->countEnqueued())->toBe(1)->and($memory_storage->countDone())->toBe(1);
+    expect($memory_storage->countEnqueued())->toBe(1)->and($memory_storage->countDone())->toBe(1)
+        ->and($message1->getState())->toBe(Message\State::DONE);
 });
 
 it('will not allow to run more than one message', function () {

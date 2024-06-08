@@ -12,6 +12,6 @@ class DummyHandler implements HandlerInterface
 {
     public function process(Message $message): ProcessingResult
     {
-        return new ProcessingResult($message->getPayload());
+        return new ProcessingResult((string)$message->getPayload());
     }
 }

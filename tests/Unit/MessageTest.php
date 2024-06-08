@@ -12,8 +12,8 @@ it('has an ID', function () {
 
 it('has enqueued status', function () {
     $message = new Message();
-    expect($message->getStatus())->toBe('ENQUEUED')
-        ->and($message->asEnqueued()->getStatus())->toBe('ENQUEUED');
+    expect($message->getState())->toBe(Message\State::ENQUEUED)
+        ->and($message->setState(Message\State::ENQUEUED)->getState())->toBe(Message\State::ENQUEUED);
 });
 
 it('has no payload', function () {
@@ -30,16 +30,16 @@ it('loads', function() {
     $message = Message::load('123', 'RUNNING', 'foobar');
     expect($message->getPayload())->toBe('foobar')
         ->and($message->getId())->toBe('123')
-        ->and($message->getStatus())->toBe('RUNNING');
+        ->and($message->getState())->toBe(Message\State::RUNNING);
 });
 
 it('has invalid status upon loading', function() {
     Message::load('123', 'INVALID', 'foobar');
 })->throws(
     QueueException::class,
-    'Invalid message status: "INVALID", valid are: ENQUEUED, RUNNING, DONE'
+    'Invalid message state: "INVALID", valid are: ENQUEUED, RUNNING, DONE'
 );
 
 it('can be marked as done', function () {
-    expect((new Message())->asDone()->getStatus())->toBe('DONE');
+    expect((new Message())->setState(Message\State::DONE)->getState())->toBe(Message\State::DONE);
 });
